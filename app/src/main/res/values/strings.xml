@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">BestPosts</string>
+    <string name="title_activity_posts">Posts</string>
+
+    <string name="avatar">User avatar</string>
 </resources>

@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -20,16 +21,42 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation project(path: ':data')
     implementation project(path: ':domain')
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation appDependencies.kotlin_stdlib
-    implementation appDependencies.app_compat
-    implementation appDependencies.core_ktx
+    implementation deps.app.kotlin
+    implementation deps.app.core_ktx
+    implementation deps.app.dagger
+    implementation deps.app.dagger_android
+
+    kapt deps.app.dagger_compiler
+    kapt deps.app.dagger_processor
+
+    implementation deps.app.app_compat
+    implementation deps.app.constraint_layout
+    implementation deps.app.material
+    implementation deps.app.lifecycle_extensions
+    implementation deps.app.recyclerview
+    implementation deps.app.glide
+    implementation deps.app.timber
+    implementation deps.app.okhttp_logger
+
+    implementation deps.app.rx_java
+    implementation deps.app.rx_kotlin
+    implementation deps.app.rx_android
+    implementation deps.app.rx_bindings
+    implementation deps.app.javax_inject
+
 
     testImplementation appTestDependencies.junit
     androidTestImplementation appTestDependencies.test_runner

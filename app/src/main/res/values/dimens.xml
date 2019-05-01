@@ -1,0 +1,16 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="post_item_height">@dimen/value_112dp</dimen>
+
+    <!-- 8-grid -->
+    <dimen name="value_8dp">8dp</dimen>
+    <dimen name="value_16dp">16dp</dimen>
+    <dimen name="value_24dp">24dp</dimen>
+    <dimen name="value_64dp">64dp</dimen>
+    <dimen name="value_80dp">80dp</dimen>
+    <dimen name="value_96dp">96dp</dimen>
+    <dimen name="value_104dp">104dp</dimen>
+    <dimen name="value_112dp">112dp</dimen>
+
+</resources>

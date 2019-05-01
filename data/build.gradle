@@ -1,9 +1,23 @@
-apply plugin: 'java-library'
+apply plugin: 'kotlin'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':domain')
+    implementation deps.data.kotlin
+    implementation deps.data.rx_java
+    implementation deps.data.javax_inject
+    api deps.data.retrofit
+    api deps.data.retrofit_adapter
+    api deps.data.retrofit_gson_converter
+    api deps.data.gson
+
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath deps.platform.kotlin_gradle_plugin
+    }
+}
