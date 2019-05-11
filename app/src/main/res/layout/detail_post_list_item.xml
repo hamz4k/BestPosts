@@ -12,47 +12,70 @@
             android:id="@+id/post_detail_list_item_avatar"
             android:layout_width="@dimen/post_detail_avatar"
             android:layout_height="@dimen/post_detail_avatar"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="@dimen/value_16dp"
-            android:contentDescription="@string/avatar_description"
-            app:layout_constraintEnd_toStartOf="@id/post_detail_list_item_author"
 
+            android:layout_marginEnd="@dimen/value_16dp"
+
+            app:layout_constraintEnd_toStartOf="@id/post_detail_list_item_author"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/avatar_description"
     />
 
     <TextView
             android:id="@+id/post_detail_list_item_author"
-            tools:text="Author"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
 
             app:layout_constraintStart_toEndOf="@id/post_detail_list_item_avatar"
             app:layout_constraintTop_toTopOf="@+id/post_detail_list_item_avatar"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+
+            style="@style/TextAppearance.MaterialComponents.Overline"
+
+            tools:text="Author"
+    />
 
     <TextView
             android:id="@+id/post_detail_list_item_title"
-            tools:text="Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
+
+            android:layout_marginTop="@dimen/value_8dp"
 
             app:layout_constraintStart_toStartOf="@+id/post_detail_list_item_author"
             app:layout_constraintTop_toBottomOf="@+id/post_detail_list_item_author"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+
+            style="@style/TextAppearance.MaterialComponents.Body2"
+
+            tools:text="Title"
+    />
     <TextView
             android:id="@+id/post_detail_list_item_body"
-            tools:text="Body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Body1"
+
+            android:layout_marginTop="@dimen/value_8dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/barrier"
+
+            style="@style/TextAppearance.MaterialComponents.Body2"
             android:maxLines="5"
 
-            app:layout_constraintTop_toBottomOf="@+id/post_detail_list_item_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/post_detail_list_item_author"
+            tools:text="Body"
+    />
+
+    <androidx.constraintlayout.widget.Barrier
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/barrier"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="post_detail_list_item_title,post_detail_list_item_avatar"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

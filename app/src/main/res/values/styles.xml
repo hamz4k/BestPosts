@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
         <item name="materialCardViewStyle">@style/CardViewStyle</item>
         <item name="android:progressBarStyle">?android:attr/progressBarStyleLarge</item>
         <item name="colorControlNormal">@color/white</item>
@@ -29,15 +29,10 @@
     </style>
 
 
-
     <style name="WhiteHeadLine" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <!--<style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>-->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 

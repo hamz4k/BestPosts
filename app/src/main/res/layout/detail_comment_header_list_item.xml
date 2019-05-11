@@ -4,14 +4,15 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/comments_header">
+        android:padding="@dimen/value_8dp"
+        android:background="@color/colorAccent">
 
     <TextView
-            android:id="@+id/comment_list_item_title"
+            android:id="@+id/detail_comment_list_item_title"
             style="@style/WhiteHeadLine"
+            android:paddingStart="@dimen/value_8dp"
+            android:paddingEnd="@dimen/value_8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/value_8dp"
-
             tools:text="Comment count"/>
 </LinearLayout>
