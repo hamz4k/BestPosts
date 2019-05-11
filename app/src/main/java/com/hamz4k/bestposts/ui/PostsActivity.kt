@@ -3,47 +3,53 @@ package com.hamz4k.bestposts.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.hamz4k.bestposts.R
-import com.hamz4k.bestposts.presentation.PostsEvents
-import com.hamz4k.bestposts.presentation.PostsViewModel
-import com.hamz4k.bestposts.presentation.PostsViewModelFactory
+import com.hamz4k.bestposts.model.toUi
+import com.hamz4k.bestposts.presentation.*
+import com.hamz4k.bestposts.ui.postdetail.PostDetailActivity
 import com.hamz4k.bestposts.utils.getViewModel
-import com.hamz4k.bestposts.utils.rootView
-import com.hamz4k.domain.posts.model.Post
+import com.hamz4k.bestposts.utils.hide
+import com.hamz4k.bestposts.utils.makeSnackBar
+import com.hamz4k.bestposts.utils.show
+import com.hamz4k.domain.RxSchedulers
+import com.hamz4k.domain.posts.model.PostLight
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_posts.*
-import kotlinx.android.synthetic.main.content_posts.*
 import timber.log.Timber
 import javax.inject.Inject
 
 class PostsActivity : AppCompatActivity() {
 
+    /* **************** */
+    /*        DI        */
+    /* **************** */
     @Inject
-    public lateinit var viewModelFactory: PostsViewModelFactory
+    lateinit var viewModelFactory: PostsViewModelFactory
     private lateinit var viewModel: PostsViewModel
-    private lateinit var listAdapter: PostsAdapter
 
     private var disposables: CompositeDisposable = CompositeDisposable()
-    private val postItemClick: PublishSubject<Post> = PublishSubject.create()
+
+    private val postItemClick: PublishSubject<PostLight> = PublishSubject.create()
+    private lateinit var listAdapter: PostsAdapter
+
+    /* ***************** */
+    /*     Life cycle    */
+    /* ***************** */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_posts)
         setSupportActionBar(toolbar)
-        viewModel = getViewModel { viewModelFactory.create(PostsViewModel::class.java) }
-
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        viewModel = getViewModel { viewModelFactory.supply() }
 
         listAdapter = PostsAdapter { postItemClick.onNext(it) }
 
-        post_list.apply {
+        post_recycler_view.apply {
             layoutManager = LinearLayoutManager(this@PostsActivity)
             adapter = listAdapter
         }
@@ -54,28 +60,59 @@ class PostsActivity : AppCompatActivity() {
         super.onResume()
         val screenLoadEvents: Observable<PostsEvents.ScreenLoad> = Observable.just(PostsEvents.ScreenLoad)
         val navigateToPost: Observable<PostsEvents.PostClicked> = postItemClick
-            .map { PostsEvents.PostClicked(it.id) }
+            .map { PostsEvents.PostClicked(it) }
 
         disposables += viewModel.registerToInputs(screenLoadEvents, navigateToPost)
 
         disposables += viewModel.observeViewState()
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { listAdapter.submitList(it.posts) },
-                ::handleError
-            )
+            .subscribeOn(RxSchedulers.io())
+            .observeOn(RxSchedulers.mainThread())
+            .subscribe(::updateView, ::handleViewStateError)
+
+        disposables += viewModel.observeViewEffects()
+            .subscribeOn(RxSchedulers.io())
+            .observeOn(RxSchedulers.mainThread())
+            .subscribe(::consumeViewEffect, ::handleViewEffectError)
     }
 
-    private fun handleError(throwable: Throwable) {
-        Snackbar.make(rootView, "something went wrong observing view state", Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show()
+    override fun onPause() {
+        super.onPause()
+        disposables.clear()
+    }
+
+    /* ********************* */
+    /*        Private        */
+    /* ********************* */
+
+    private fun consumeViewEffect(viewEffect: PostsViewEffect) {
+        when (viewEffect) {
+            is PostsViewEffect.NavigateToPostDetail ->
+                PostDetailActivity.startActivity(this, viewEffect.post.toUi())
+        }
+    }
+
+    private fun updateView(viewState: PostsViewState) {
+        if (!viewState.isLoading) {
+            post_loader.hide()
+            post_recycler_view.show()
+            listAdapter.submitList(viewState.posts)
+        } else {
+            post_recycler_view.hide()
+            post_loader.show()
+        }
+    }
+
+    private fun handleViewStateError(throwable: Throwable) {
+        post_loader.hide()
+        post_recycler_view.hide()
+        makeSnackBar("something went wrong observing view state")
         Timber.e(throwable, "something went wrong observing view state")
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.clear()
+    private fun handleViewEffectError(throwable: Throwable) {
+        makeSnackBar("something went wrong observing view effect")
+        Timber.e(throwable, "something went wrong observing view effects")
     }
+
 
 }

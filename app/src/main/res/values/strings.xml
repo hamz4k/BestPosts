@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">BestPosts</string>
     <string name="title_activity_posts">Posts</string>
+    <string name="title_activity_detail">Post details</string>
 
-    <string name="avatar">User avatar</string>
+    <string name="comment_header_count">Comments (%1$d)</string>
+
+    <string name="avatar_description">User avatar</string>
 </resources>

@@ -2,6 +2,7 @@ package com.hamz4k.bestposts.di
 
 import com.google.gson.Gson
 import com.hamz4k.bestposts.BuildConfig
+import com.hamz4k.bestposts.ui.postdetail.PostDetailActivity
 import com.hamz4k.bestposts.ui.PostsActivity
 import com.hamz4k.data.posts.service.BestPostsService
 import dagger.Module
@@ -60,4 +61,7 @@ abstract class AppModule {
 
     @ContributesAndroidInjector
     abstract fun contributesPostsActivity(): PostsActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributesPostDetailActivity(): PostDetailActivity
 }

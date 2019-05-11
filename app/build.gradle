@@ -28,6 +28,10 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -42,7 +46,7 @@ dependencies {
     kapt deps.app.dagger_compiler
     kapt deps.app.dagger_processor
 
-    implementation deps.app.app_compat
+//    implementation deps.app.app_compat
     implementation deps.app.constraint_layout
     implementation deps.app.material
     implementation deps.app.lifecycle_extensions

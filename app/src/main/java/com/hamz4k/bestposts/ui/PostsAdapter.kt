@@ -13,10 +13,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.hamz4k.bestposts.R
 import com.hamz4k.bestposts.utils.growShrink
 import com.hamz4k.bestposts.utils.inflate
-import com.hamz4k.domain.posts.model.Post
+import com.hamz4k.domain.posts.model.PostLight
 
-class PostsAdapter(private val postClickListener: (Post) -> Unit) :
-    ListAdapter<Post, PostsAdapter.PostViewHolder>(PostDiffCallback()) {
+class PostsAdapter(private val postClickListener: (PostLight) -> Unit) :
+    ListAdapter<PostLight, PostsAdapter.PostViewHolder>(PostDiffCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -35,14 +35,14 @@ class PostsAdapter(private val postClickListener: (Post) -> Unit) :
         private val userView: ImageView = itemView.findViewById(R.id.post_list_item_user_image)
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: Post, postClickListener: (Post) -> Unit) {
+        fun bind(item: PostLight, postClickListener: (PostLight) -> Unit) {
 
             titleView.text = item.title
             bodySnippetView.text = item.body
 
             Glide.with(itemView.context)
                 .load(item.avatarUrl)
-                .apply(RequestOptions.circleCropTransform())
+//                .apply(RequestOptions.circleCropTransform())
 //                .placeholder(spinner)
                 .into(userView)
 
@@ -53,10 +53,10 @@ class PostsAdapter(private val postClickListener: (Post) -> Unit) :
         }
     }
 
-    class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
-        override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean = true
+    class PostDiffCallback : DiffUtil.ItemCallback<PostLight>() {
+        override fun areItemsTheSame(oldItem: PostLight, newItem: PostLight): Boolean = true
 
-        override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+        override fun areContentsTheSame(oldItem: PostLight, newItem: PostLight): Boolean {
             return oldItem.id == newItem.id
         }
     }

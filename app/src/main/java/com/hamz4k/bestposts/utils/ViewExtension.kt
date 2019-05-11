@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
+import com.google.android.material.snackbar.Snackbar
 
 
 val Activity.rootView: ViewGroup
@@ -36,3 +37,14 @@ fun ImageView.growShrink() {
     animSetXY.playSequentially(growAnimation, shrinkAnimation)
     animSetXY.start()
 }
+
+fun Activity.makeSnackBar(
+    msg: String,
+    view: View = rootView,
+    duration: Int = Snackbar.LENGTH_LONG
+) = Snackbar.make(rootView, msg, duration)
+//    .setAction("Action", null)
+    .show()
+
+fun View.hide() {this.visibility = View.GONE}
+fun View.show() {this.visibility = View.VISIBLE}

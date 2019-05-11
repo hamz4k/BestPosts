@@ -14,7 +14,7 @@ versions.rx_bindings = "2.2.0"
 versions.dagger2 = "2.22.1"
 versions.material = "1.1.0-alpha05"
 versions.app_compat = "1.1.0-alpha04"
-versions.constraint_layout = "2.0.0-alpha5"
+versions.constraint_layout = "2.0.0-beta1"
 versions.lifecycle_extensions = "2.1.0-alpha04"
 versions.reyclerview = "1.0.0"
 versions.glide = "4.9.0"
@@ -48,7 +48,6 @@ platform.kotlin_gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$vers
 deps.platform = platform
 
 def android = [:]
-android.app_compat = "androidx.appcompat:appcompat:$versions.app_compat"
 android.material = "com.google.android.material:material:$versions.material"
 android.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
 android.lifecycle_extensions = "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle_extensions"
@@ -192,7 +191,7 @@ ext {
             mockito: "com.nhaarman:mockito-kotlin:${mockito_kotlin_version}",
             truth  : "com.google.truth:truth:${truth_version}"
     ]
-
+//TODO clean up
 //    app = [
 //            kotlin_stdlib        : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
 //            core_ktx             : "androidx.core:core-ktx:$core_ktx_version",

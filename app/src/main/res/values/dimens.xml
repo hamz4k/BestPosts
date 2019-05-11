@@ -1,7 +1,9 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="post_item_height">@dimen/value_112dp</dimen>
+    <dimen name="post_item_avatar">@dimen/value_112dp</dimen>
+    <dimen name="post_detail_avatar">@dimen/value_64dp</dimen>
+    <dimen name="comment_item_height">@dimen/value_96dp</dimen>
 
     <!-- 8-grid -->
     <dimen name="value_8dp">8dp</dimen>

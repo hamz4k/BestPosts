@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="post_detail_list_detail" type="id"/>
+    <item name="post_detail_list_comment" type="id"/>
+    <item name="post_detail_list_comment_header" type="id"/>
+</resources>

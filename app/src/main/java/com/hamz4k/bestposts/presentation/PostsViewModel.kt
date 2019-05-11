@@ -1,9 +1,8 @@
 package com.hamz4k.bestposts.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.hamz4k.domain.posts.PostsRepository
-import com.hamz4k.domain.posts.model.Post
+import com.hamz4k.domain.posts.model.PostLight
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
@@ -13,11 +12,8 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import javax.inject.Inject
 
-class PostsViewModelFactory @Inject constructor(val postsRepository: PostsRepository) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PostsViewModel(postsRepository = postsRepository) as T
-    }
+class PostsViewModelFactory @Inject constructor(val postsRepository: PostsRepository) {
+    fun supply() = PostsViewModel(postsRepository = postsRepository)
 }
 
 class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), InputsConsumer<PostsEvents> {
@@ -26,20 +22,26 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
 
     private val eventsObservable = PublishSubject.create<PostsEvents>()
     private val viewState = BehaviorSubject.create<PostsViewState>()
+    private val viewEffects = PublishSubject.create<PostsViewEffect>()
 
     init {
         val viewChanges = eventsObservable
-            .compose(eventToState())
+            .doOnNext { Timber.d("==== event received ${it.javaClass.simpleName}") }
             .publish()
-        viewChanges.subscribe(viewState)
+
+        viewChanges.compose(eventToState()).subscribe(viewState)
+        viewChanges.compose(eventToEffect()).subscribe(viewEffects)
+
         viewChanges.autoConnect(0) { viewModelDisposable = it }
     }
 
-
-    override fun registerToInputs(vararg inputSources: Observable<out PostsEvents>): Disposable {
-        return Observable.mergeArray(*inputSources)
-            .subscribe(eventsObservable::onNext, ::handleError)
+    private fun eventToEffect(): ObservableTransformer<PostsEvents, PostsViewEffect> {
+        return ObservableTransformer { upstream ->
+            upstream.filter { it is PostsEvents.PostClicked }
+                .map<PostsViewEffect> { PostsViewEffect.NavigateToPostDetail((it as PostsEvents.PostClicked).post) }
+        }
     }
+
 
     override fun onCleared() {
         super.onCleared()
@@ -49,8 +51,16 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
     /**
      * PUBLIC
      */
+    override fun registerToInputs(vararg inputSources: Observable<out PostsEvents>): Disposable {
+        return Observable.mergeArray(*inputSources)
+            .subscribe(eventsObservable::onNext, ::handleError)
+    }
 
-    fun observeViewState(): Observable<PostsViewState> {
+    fun observeViewEffects(): Observable<PostsViewEffect> {
+        return viewEffects
+    }
+
+    fun observeViewState(): Observable<out PostsViewState> {
         return viewState
     }
 
@@ -62,31 +72,31 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
     private fun eventToState(): ObservableTransformer<PostsEvents, PostsViewState> {
         return ObservableTransformer { upstream ->
             upstream.publish { eventsObservable ->
-                Observable.merge(
-                    eventsObservable.ofType(PostsEvents.ScreenLoad::class.java).compose(onScreenLoad()),
-                    eventsObservable.ofType(PostsEvents.PostClicked::class.java).compose(onPostClicked())
-                )
+                eventsObservable.ofType(PostsEvents.ScreenLoad::class.java).compose(onScreenLoad())
             }
         }
     }
 
-    private fun onPostClicked(): ObservableTransformer<PostsEvents.PostClicked, PostsViewState> {
-        return ObservableTransformer { upstream -> upstream.map { viewState.value ?: PostsViewState() } }
-    }
+    /*private fun onPostClicked(): ObservableTransformer<PostsEvents.PostClicked, PostsViewState> {
+        return ObservableTransformer { upstream ->
+            upstream.map { viewState.value ?: PostsViewState() }
+        }
+    }*/
 
     private fun onScreenLoad(): ObservableTransformer<PostsEvents.ScreenLoad, PostsViewState> {
         return ObservableTransformer { upstream ->
-            upstream.switchMap {
-                postsRepository.fetchPosts()
-                    .subscribeOn(Schedulers.io())
-                    .map {
-                        PostsViewState(posts = it)
-                    }
-                    .onErrorResumeNext { t: Throwable ->
-                        Observable.just(PostsViewState(error = "Loading failed please retry"))
-                    }
+            upstream.doOnNext { it.toState() }
+                .switchMap {
+                    postsRepository.fetchPosts()
+                        .subscribeOn(Schedulers.io())
+                        .map {
+                            PostsViewState(posts = it)
+                        }
+                        .onErrorResumeNext { t: Throwable ->
+                            Observable.just(PostsViewState(error = "Loading failed please retry"))
+                        }
 
-            }
+                }
         }
     }
 
@@ -95,18 +105,22 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
 
 sealed class PostsEvents {
     object ScreenLoad : PostsEvents()
-    data class PostClicked(val id: Int) : PostsEvents()
+    data class PostClicked(val post: PostLight) : PostsEvents()
 }
 
 fun PostsEvents.ScreenLoad.toState() = PostsViewState(isLoading = true)
 
 data class PostsViewState(
-    val posts: List<Post> = emptyList(),
+    val posts: List<PostLight> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )
 
-//data class Post(val id: String)
+sealed class PostsViewEffect {
+    data class NavigateToPostDetail(val post: PostLight) : PostsViewEffect()
+}
+
+//data class PostLight(val id: String)
 
 interface InputsConsumer<T> {
     fun registerToInputs(vararg inputSources: Observable<out T>): Disposable

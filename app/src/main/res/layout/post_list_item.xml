@@ -1,55 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.google.android.material.card.MaterialCardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="@dimen/post_item_height"
+        android:layout_margin="@dimen/value_8dp"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/value_16dp">
+        tools:backgroundTint="@color/design_default_color_secondary"
+>
 
-    <ImageView
-            android:id="@+id/post_list_item_user_image"
-            android:layout_width="@dimen/value_64dp"
-            android:layout_height="@dimen/value_64dp"
-            android:contentDescription="@string/avatar"
-            android:scaleType="centerCrop"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        <ImageView
+                android:id="@+id/post_list_item_user_image"
+                android:layout_width="@dimen/post_item_avatar"
+                android:layout_height="@dimen/post_item_avatar"
+                android:contentDescription="@string/avatar_description"
 
-    <TextView
-            android:id="@+id/post_list_item_title"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/value_16dp"
-            android:maxLines="2"
-            android:ellipsize="end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
-            app:layout_constraintBottom_toTopOf="@id/post_list_item_body_snippet"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/post_list_item_user_image"
-            app:layout_constraintTop_toTopOf="@id/post_list_item_user_image"
+                tools:src="@android:drawable/ic_menu_gallery"/>
 
-            tools:text="Title"/>
+        <TextView
+                android:id="@+id/post_list_item_title"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/value_8dp"
+                android:paddingEnd="@dimen/value_8dp"
+                android:layout_marginTop="@dimen/value_8dp"
 
-    <TextView
-            android:id="@+id/post_list_item_body_snippet"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
+                android:maxLines="2"
+                android:ellipsize="end"
 
-            app:layout_constraintBottom_toBottomOf="@id/post_list_item_user_image"
-            app:layout_constraintEnd_toEndOf="@+id/post_list_item_title"
-            app:layout_constraintStart_toStartOf="@+id/post_list_item_title"
-            app:layout_constraintTop_toBottomOf="@id/post_list_item_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/post_list_item_user_image"
+                app:layout_constraintTop_toTopOf="parent"
 
-            tools:text="Boddy snippet"/>
+                tools:text="Title"/>
+
+        <TextView
+                android:id="@+id/post_list_item_body_snippet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+
+                android:paddingStart="@dimen/value_8dp"
+                android:paddingEnd="@dimen/value_8dp"
+                android:layout_marginBottom="@dimen/value_8dp"
+                android:layout_marginTop="@dimen/value_8dp"
+
+                android:maxLines="2"
+
+                app:layout_constraintEnd_toEndOf="@+id/post_list_item_title"
+                app:layout_constraintStart_toStartOf="@+id/post_list_item_title"
+                app:layout_constraintTop_toBottomOf="@id/post_list_item_title"
+
+                tools:text="Body snippet"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
