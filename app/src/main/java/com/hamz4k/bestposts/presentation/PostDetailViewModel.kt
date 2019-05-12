@@ -75,7 +75,6 @@ class PostDetailViewModel(val postsRepository: PostsRepository) : ViewModel(), I
     private fun onScreenLoad(): ObservableTransformer<PostDetailEvents.ScreenLoad, PostDetailViewState> {
         return ObservableTransformer { upstream ->
             upstream
-                .doOnNext { PostDetailViewState(isLoading = true) }
                 .switchMap {
                     postsRepository.fetchPostDetails(it.post.toPost())
                         .subscribeOn(RxSchedulers.io())
@@ -87,6 +86,7 @@ class PostDetailViewModel(val postsRepository: PostsRepository) : ViewModel(), I
                             Observable.just(PostDetailViewState(error = "Loading failed please retry"))
                         }
                 }
+                .startWith (PostDetailViewState(isLoading = true))
         }
     }
 

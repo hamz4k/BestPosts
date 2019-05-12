@@ -2,7 +2,9 @@ package com.hamz4k.bestposts.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hamz4k.bestposts.R
 import com.hamz4k.bestposts.model.toUi
 import com.hamz4k.bestposts.presentation.*
@@ -18,7 +20,6 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.activity_posts.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,6 +37,9 @@ class PostsActivity : AppCompatActivity() {
     private val postItemClick: PublishSubject<PostLight> = PublishSubject.create()
     private lateinit var listAdapter: PostsAdapter
 
+    private val postsRecyclerView by lazy { findViewById<RecyclerView>(R.id.post_recycler_view) }
+    private val postsProgressView by lazy { findViewById<ContentLoadingProgressBar>(R.id.post_loader) }
+
     /* ***************** */
     /*     Life cycle    */
     /* ***************** */
@@ -44,12 +48,12 @@ class PostsActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_posts)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
         viewModel = getViewModel { viewModelFactory.supply() }
 
         listAdapter = PostsAdapter { postItemClick.onNext(it) }
 
-        post_recycler_view.apply {
+        postsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@PostsActivity)
             adapter = listAdapter
         }
@@ -59,10 +63,9 @@ class PostsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val screenLoadEvents: Observable<PostsEvents.ScreenLoad> = Observable.just(PostsEvents.ScreenLoad)
-        val navigateToPost: Observable<PostsEvents.PostClicked> = postItemClick
-            .map { PostsEvents.PostClicked(it) }
+        val navigateToDetail: Observable<PostsEvents.PostClicked> = postItemClick.map { PostsEvents.PostClicked(it) }
 
-        disposables += viewModel.registerToInputs(screenLoadEvents, navigateToPost)
+        disposables += viewModel.registerToInputs(screenLoadEvents, navigateToDetail)
 
         disposables += viewModel.observeViewState()
             .subscribeOn(RxSchedulers.io())
@@ -93,18 +96,18 @@ class PostsActivity : AppCompatActivity() {
 
     private fun updateView(viewState: PostsViewState) {
         if (!viewState.isLoading) {
-            post_loader.hide()
-            post_recycler_view.show()
+            postsProgressView.hide()
+            postsRecyclerView.show()
             listAdapter.submitList(viewState.posts)
         } else {
-            post_recycler_view.hide()
-            post_loader.show()
+            postsRecyclerView.hide()
+            postsProgressView.show()
         }
     }
 
     private fun handleViewStateError(throwable: Throwable) {
-        post_loader.hide()
-        post_recycler_view.hide()
+        postsProgressView.hide()
+        postsRecyclerView.hide()
         makeSnackBar("something went wrong observing view state")
         Timber.e(throwable, "something went wrong observing view state")
     }
@@ -113,6 +116,4 @@ class PostsActivity : AppCompatActivity() {
         makeSnackBar("something went wrong observing view effect")
         Timber.e(throwable, "something went wrong observing view effects")
     }
-
-
 }

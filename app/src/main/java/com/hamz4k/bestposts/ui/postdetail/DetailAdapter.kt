@@ -21,12 +21,11 @@ class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(Detai
             R.id.post_detail_list_comment_header -> CommentHeaderViewHolder((parent.inflate(R.layout.detail_comment_header_list_item)))
             R.id.post_detail_list_comment -> CommentViewHolder((parent.inflate(R.layout.detail_comment_list_item)))
             R.id.post_detail_list_detail -> DetailViewHolder(parent.inflate(R.layout.detail_post_list_item))
-            else -> throw IllegalStateException("Item type should be either Comment or Detail")
+            else -> throw IllegalStateException("Item type should be comment, header or detail")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is CommentViewHolder -> holder.bind(getItem(position) as PostDetailItem.Comment)
             is DetailViewHolder -> holder.bind(getItem(position) as PostDetailItem.Detail)
@@ -43,7 +42,6 @@ class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(Detai
         }
     }
 
-
     class DetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val authorImageView: ImageView = itemView.findViewById(R.id.post_detail_list_item_avatar)
@@ -53,7 +51,6 @@ class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(Detai
 
         @SuppressLint("SetTextI18n")
         fun bind(item: PostDetailItem.Detail) {
-
             Glide.with(itemView.context)
                 .load(item.avatarUrl)
                 .apply(RequestOptions.circleCropTransform())

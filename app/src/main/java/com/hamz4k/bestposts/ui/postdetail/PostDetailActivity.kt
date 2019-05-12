@@ -4,13 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hamz4k.bestposts.R
+import com.hamz4k.bestposts.model.PostUi
 import com.hamz4k.bestposts.presentation.PostDetailEvents
 import com.hamz4k.bestposts.presentation.PostDetailViewModel
 import com.hamz4k.bestposts.presentation.PostDetailViewModelFactory
-import com.hamz4k.bestposts.model.PostUi
+import com.hamz4k.bestposts.presentation.PostDetailViewState
 import com.hamz4k.bestposts.utils.getViewModel
 import com.hamz4k.bestposts.utils.hide
 import com.hamz4k.bestposts.utils.makeSnackBar
@@ -20,7 +23,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.activity_post_detail.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class PostDetailActivity : AppCompatActivity() {
@@ -36,6 +39,7 @@ class PostDetailActivity : AppCompatActivity() {
             source.startActivity(intent)
         }
     }
+
     /* **************** */
     /*        DI        */
     /* **************** */
@@ -43,6 +47,8 @@ class PostDetailActivity : AppCompatActivity() {
     lateinit var viewModelFactory: PostDetailViewModelFactory
     private lateinit var viewModel: PostDetailViewModel
 
+    private val postDetailProgress by lazy { findViewById<ContentLoadingProgressBar>(R.id.post_detail_loader) }
+    private val postDetailRecyclerView by lazy { findViewById<RecyclerView>(R.id.post_detail_recycler_view) }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
     private lateinit var postDetailAdapter: DetailAdapter
@@ -63,15 +69,14 @@ class PostDetailActivity : AppCompatActivity() {
             makeSnackBar("Post not found")
             finish()
         }
-
         setContentView(R.layout.activity_post_detail)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = getViewModel { viewModelFactory.supply() }
 
         postDetailAdapter = DetailAdapter()
-        post_detail_recycler_view.apply {
+        postDetailRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = postDetailAdapter
@@ -87,17 +92,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         disposables += viewModel.observeViewState()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                if (it.isLoading) {
-                    post_detail_loader.show()
-                    post_detail_recycler_view.hide()
-
-                } else {
-                    post_detail_loader.hide()
-                    post_detail_recycler_view.show()
-                    postDetailAdapter.submitList(it.detail)
-                }
-            }
+            .subscribe(::updateView, ::handleViewStateError)
     }
 
     override fun onPause() {
@@ -107,5 +102,28 @@ class PostDetailActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return finish().let { true }
+    }
+
+    /* ***************** */
+    /*      Private      */
+    /* ***************** */
+
+    private fun updateView(viewState: PostDetailViewState) {
+        if (viewState.isLoading) {
+            postDetailProgress.show()
+            postDetailRecyclerView.hide()
+
+        } else {
+            postDetailProgress.hide()
+            postDetailRecyclerView.show()
+            postDetailAdapter.submitList(viewState.detail)
+        }
+    }
+
+    private fun handleViewStateError(throwable: Throwable) {
+        postDetailProgress.hide()
+        postDetailRecyclerView.hide()
+        makeSnackBar("something went wrong observing view state")
+        Timber.e(throwable, "something went wrong observing view state")
     }
 }

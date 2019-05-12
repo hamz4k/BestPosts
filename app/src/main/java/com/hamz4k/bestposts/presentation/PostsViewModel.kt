@@ -12,7 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import javax.inject.Inject
 
-class PostsViewModelFactory @Inject constructor(val postsRepository: PostsRepository) {
+class PostsViewModelFactory @Inject constructor(private val postsRepository: PostsRepository) {
     fun supply() = PostsViewModel(postsRepository = postsRepository)
 }
 
@@ -42,7 +42,6 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
         }
     }
 
-
     override fun onCleared() {
         super.onCleared()
         viewModelDisposable?.dispose()
@@ -64,7 +63,6 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
         return viewState
     }
 
-
     private fun handleError(throwable: Throwable) {
         Timber.e(throwable, "something went wrong processing input events")
     }
@@ -77,15 +75,9 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
         }
     }
 
-    /*private fun onPostClicked(): ObservableTransformer<PostsEvents.PostClicked, PostsViewState> {
-        return ObservableTransformer { upstream ->
-            upstream.map { viewState.value ?: PostsViewState() }
-        }
-    }*/
-
     private fun onScreenLoad(): ObservableTransformer<PostsEvents.ScreenLoad, PostsViewState> {
         return ObservableTransformer { upstream ->
-            upstream.doOnNext { it.toState() }
+            upstream
                 .switchMap {
                     postsRepository.fetchPosts()
                         .subscribeOn(Schedulers.io())
@@ -97,6 +89,7 @@ class PostsViewModel(val postsRepository: PostsRepository) : ViewModel(), Inputs
                         }
 
                 }
+                .startWith (PostsViewState(isLoading = true))
         }
     }
 
@@ -108,8 +101,6 @@ sealed class PostsEvents {
     data class PostClicked(val post: PostLight) : PostsEvents()
 }
 
-fun PostsEvents.ScreenLoad.toState() = PostsViewState(isLoading = true)
-
 data class PostsViewState(
     val posts: List<PostLight> = emptyList(),
     val isLoading: Boolean = false,
@@ -119,8 +110,6 @@ data class PostsViewState(
 sealed class PostsViewEffect {
     data class NavigateToPostDetail(val post: PostLight) : PostsViewEffect()
 }
-
-//data class PostLight(val id: String)
 
 interface InputsConsumer<T> {
     fun registerToInputs(vararg inputSources: Observable<out T>): Disposable
