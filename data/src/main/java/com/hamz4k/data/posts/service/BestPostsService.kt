@@ -30,10 +30,8 @@ data class UserData(
     @SerializedName("name") val name: String,
     @SerializedName("username") val username: String,
     @SerializedName("email") val email: String,
-    @SerializedName("address") val address: AddressData,
     @SerializedName("phone") val phone: String,
-    @SerializedName("website") val website: String,
-    @SerializedName("company") val company: CompanyData
+    @SerializedName("website") val website: String
 )
 
 data class CommentData(
@@ -43,46 +41,3 @@ data class CommentData(
     @SerializedName("email") val email: String,
     @SerializedName("body") val body: String
 )
-
-data class AddressData(
-    @SerializedName("street") val street: String,
-    @SerializedName("suite") val suite: String,
-    @SerializedName("city") val city: String,
-    @SerializedName("zipcode") val zipcode: String,
-    @SerializedName("geo") val latlon: LatLonData
-)
-
-data class LatLonData(
-    @SerializedName("lat") val lat: String,
-    @SerializedName("lng") val lon: String
-)
-
-data class CompanyData(
-    @SerializedName("name") val name: String,
-    @SerializedName("catchPhrase") val catchPhrase: String,
-    @SerializedName("bs") val description: String
-)
-
-
-//
-//"id": 1,
-//"name": "Leanne Graham",
-//"username": "Bret",
-//"email": "Sincere@april.biz",
-//"address": {
-//    "street": "Kulas Light",
-//    "suite": "Apt. 556",
-//    "city": "Gwenborough",
-//    "zipcode": "92998-3874",
-//    "geo": {
-//        "lat": "-37.3159",
-//        "lng": "81.1496"
-//    }
-//},
-//"phone": "1-770-736-8031 x56442",
-//"website": "hildegard.org",
-//"company": {
-//    "name": "Romaguera-Crona",
-//    "catchPhrase": "Multi-layered client-server neural-net",
-//    "bs": "harness real-time e-markets"
-//}

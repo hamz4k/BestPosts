@@ -21,7 +21,7 @@ fun ViewGroup.inflate(
     attachToRoot: Boolean = false
 ): View = LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 
-fun ImageView.growShrink() {
+/*fun ImageView.growShrink() {
     val expansionFactor: Float = 0.2F
     val growX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f + expansionFactor)
     val growY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f + expansionFactor)
@@ -36,7 +36,7 @@ fun ImageView.growShrink() {
     val animSetXY = AnimatorSet()
     animSetXY.playSequentially(growAnimation, shrinkAnimation)
     animSetXY.start()
-}
+}*/
 
 fun Activity.makeSnackBar(
     msg: String,

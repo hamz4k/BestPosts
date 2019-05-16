@@ -61,7 +61,8 @@ dependencies {
     implementation deps.app.rx_bindings
     implementation deps.app.javax_inject
 
-
-    testImplementation appTestDependencies.junit
-    androidTestImplementation appTestDependencies.test_runner
+    testImplementation deps.app.test.junit
+    testImplementation deps.app.test.mockito_kotlin
+//    testImplementation appTestDependencies.junit
+//    androidTestImplementation appTestDependencies.test_runner
 }

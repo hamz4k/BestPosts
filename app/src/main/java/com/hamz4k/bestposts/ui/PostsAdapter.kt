@@ -9,9 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.hamz4k.bestposts.R
-import com.hamz4k.bestposts.utils.growShrink
 import com.hamz4k.bestposts.utils.inflate
 import com.hamz4k.domain.posts.model.PostLight
 
@@ -31,7 +29,8 @@ class PostsAdapter(private val postClickListener: (PostLight) -> Unit) :
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val titleView: TextView = itemView.findViewById(R.id.post_list_item_title)
-        private val bodySnippetView: TextView = itemView.findViewById(R.id.post_list_item_body_snippet)
+        private val bodySnippetView: TextView =
+            itemView.findViewById(R.id.post_list_item_body_snippet)
         private val userView: ImageView = itemView.findViewById(R.id.post_list_item_user_image)
 
         @SuppressLint("SetTextI18n")
@@ -42,13 +41,10 @@ class PostsAdapter(private val postClickListener: (PostLight) -> Unit) :
 
             Glide.with(itemView.context)
                 .load(item.avatarUrl)
-//                .apply(RequestOptions.circleCropTransform())
-//                .placeholder(spinner)
                 .into(userView)
 
             itemView.setOnClickListener {
                 postClickListener.invoke(item)
-                userView.growShrink()
             }
         }
     }

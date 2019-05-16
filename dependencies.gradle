@@ -23,6 +23,11 @@ versions.retrofit = "2.3.0"
 versions.gson = "2.7"
 versions.okhttp = "3.14.1"
 versions.javax_inject = "1"
+
+//testing
+versions.mockito_kotlin = "1.5.0"
+versions.truth = "0.41"
+
 /*versions.javax_annotation = "2.0.0"
 versions.javax_inject = "2.0.0"
 versions.androidx_annotation = "2.0.0"*/
@@ -109,6 +114,28 @@ app.dagger_android = dagger.android
 app.glide = libs.glide
 app.timber = libs.timber
 app.okhttp_logger = libs.okhttp_logger
+
+
+def test = [:]
+//test.junit = "junit:junit:$versions.junit"
+test.junit = kotlin.test
+test.mockito_kotlin = "com.nhaarman:mockito-kotlin:$versions.mockito_kotlin"
+test.truth = "com.google.truth:truth:$versions.truth"
+test.runner = "androidx.test:runner:$versions.test_runner"
+
+app.test = test
+
+
+//        appTestDependencies = [
+//        junit      : "junit:junit:${junit_version}",
+//        test_runner: "androidx.test:runner:${test_runner_version}",
+//            mockito      : "com.nhaarman:mockito-kotlin:${mockito_kotlin_version}",
+//            archTesting  : "androidx.arch.core:core-testing:${core_testing_version}",
+//            androidRules : "androidx.test:rules:${runner_version}",
+//            truth        : "com.google.truth:truth:${truth_version}"
+//]
+
+
 deps.app = app
 
 def domain = [:]
@@ -216,15 +243,6 @@ ext {
 //            retrofitRxJavaAdapter: "com.squareup.retrofit2:adapter-rxjava2:${retrofit_version}",
 
 //    ]
-
-    appTestDependencies = [
-            junit      : "junit:junit:${junit_version}",
-            test_runner: "androidx.test:runner:${test_runner_version}",
-//            mockito      : "com.nhaarman:mockito-kotlin:${mockito_kotlin_version}",
-//            archTesting  : "androidx.arch.core:core-testing:${core_testing_version}",
-//            androidRules : "androidx.test:rules:${runner_version}",
-//            truth        : "com.google.truth:truth:${truth_version}"
-    ]
 
 
 }

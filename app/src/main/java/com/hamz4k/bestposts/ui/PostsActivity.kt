@@ -1,7 +1,9 @@
 package com.hamz4k.bestposts.ui
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.Group
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,11 +36,14 @@ class PostsActivity : AppCompatActivity() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
-    private val postItemClick: PublishSubject<PostLight> = PublishSubject.create()
+    private val postItemClickSubject: PublishSubject<PostLight> = PublishSubject.create()
+    private val retryClickSubject: PublishSubject<PostsEvents.Retry> = PublishSubject.create()
     private lateinit var listAdapter: PostsAdapter
 
     private val postsRecyclerView by lazy { findViewById<RecyclerView>(R.id.post_recycler_view) }
     private val postsProgressView by lazy { findViewById<ContentLoadingProgressBar>(R.id.post_loader) }
+    private val errorStateView by lazy { findViewById<Group>(R.id.post_error_state_group) }
+    private val retryButtonView by lazy { findViewById<Button>(R.id.post_retry_button) }
 
     /* ***************** */
     /*     Life cycle    */
@@ -51,7 +56,7 @@ class PostsActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         viewModel = getViewModel { viewModelFactory.supply() }
 
-        listAdapter = PostsAdapter { postItemClick.onNext(it) }
+        listAdapter = PostsAdapter { postItemClickSubject.onNext(it) }
 
         postsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@PostsActivity)
@@ -62,10 +67,17 @@ class PostsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val screenLoadEvents: Observable<PostsEvents.ScreenLoad> = Observable.just(PostsEvents.ScreenLoad)
-        val navigateToDetail: Observable<PostsEvents.PostClicked> = postItemClick.map { PostsEvents.PostClicked(it) }
+        val screenLoadEvents: Observable<PostsEvents.ScreenLoad> =
+            Observable.just(PostsEvents.ScreenLoad)
+        val navigateToDetail: Observable<PostsEvents.PostClicked> =
+            postItemClickSubject.map { PostsEvents.PostClicked(it) }
+//        val retryClicks: Observable<PostsEvents.Retry> =
+//            RxView.clicks(retryButtonView)
+//                .map { PostsEvents.Retry }
 
-        disposables += viewModel.registerToInputs(screenLoadEvents, navigateToDetail)
+        disposables += viewModel.registerToInputs(retryClickSubject,
+                                                  screenLoadEvents,
+                                                  navigateToDetail)
 
         disposables += viewModel.observeViewState()
             .subscribeOn(RxSchedulers.io())
@@ -95,14 +107,30 @@ class PostsActivity : AppCompatActivity() {
     }
 
     private fun updateView(viewState: PostsViewState) {
-        if (!viewState.isLoading) {
-            postsProgressView.hide()
-            postsRecyclerView.show()
-            listAdapter.submitList(viewState.posts)
-        } else {
+        //Loading
+        if (viewState.isLoading) {
             postsRecyclerView.hide()
             postsProgressView.show()
+            errorStateView.hide()
+            return
         }
+        //Failure
+        viewState.error.takeIf { !it.isNullOrBlank() }?.let {
+            postsRecyclerView.hide()
+            postsProgressView.hide()
+            errorStateView.show()
+            retryButtonView.setOnClickListener {
+                retryClickSubject.onNext(PostsEvents.Retry)
+            }
+            makeSnackBar(it)
+            return
+        }
+        // Success
+        listAdapter.submitList(viewState.posts)
+
+        postsRecyclerView.show()
+        postsProgressView.hide()
+        errorStateView.hide()
     }
 
     private fun handleViewStateError(throwable: Throwable) {

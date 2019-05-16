@@ -6,4 +6,8 @@
     <string name="comment_header_count">Comments (%1$d)</string>
 
     <string name="avatar_description">User avatar</string>
+
+    <string name="error_message">A error occurred, please retry</string>
+
+    <string name="retry">Retry</string>
 </resources>
