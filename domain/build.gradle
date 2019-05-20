@@ -5,6 +5,10 @@ dependencies {
     implementation deps.domain.kotlin
     implementation deps.domain.rx_java
     implementation deps.domain.javax_inject
+
+    testImplementation deps.domain.test.junit
+    testImplementation deps.domain.test.truth
+    testImplementation deps.domain.test.mockito_kotlin
 }
 
 buildscript {

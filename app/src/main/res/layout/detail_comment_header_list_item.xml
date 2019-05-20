@@ -8,7 +8,7 @@
         android:background="@color/colorAccent">
 
     <TextView
-            android:id="@+id/detail_comment_list_item_title"
+            android:id="@+id/detail_comment_list_item_author_name"
             style="@style/WhiteHeadLine"
             android:paddingStart="@dimen/value_8dp"
             android:paddingEnd="@dimen/value_8dp"

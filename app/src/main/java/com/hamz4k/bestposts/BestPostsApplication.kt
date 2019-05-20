@@ -3,7 +3,7 @@ package com.hamz4k.bestposts
 import android.app.Activity
 import android.app.Application
 import com.hamz4k.bestposts.di.DaggerAppComponent
-import com.hamz4k.domain.RxSchedulers
+import com.hamz4k.bestposts.domain.RxSchedulers
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector

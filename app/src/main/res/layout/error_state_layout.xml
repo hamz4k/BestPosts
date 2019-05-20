@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/error_state_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/error_state_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/ic_warning"
+        android:drawablePadding="@dimen/value_8dp"
+        android:gravity="center"
+        android:text="@string/error_message" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/error_state_retry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_8dp"
+        android:text="@string/retry" />
+
+</LinearLayout>

@@ -16,7 +16,7 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".ui.PostsActivity"
+                android:name=".ui.posts.PostsActivity"
                 android:label="@string/title_activity_posts">
 
             <intent-filter>
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.postdetail.PostDetailActivity"
+                android:name=".ui.posts.detail.PostDetailActivity"
                 android:label="@string/title_activity_detail">
         </activity>
     </application>

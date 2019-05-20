@@ -1,8 +1,9 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':domain')
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.data.kotlin
     implementation deps.data.rx_java
     implementation deps.data.javax_inject
@@ -10,6 +11,11 @@ dependencies {
     api deps.data.retrofit_adapter
     api deps.data.retrofit_gson_converter
     api deps.data.gson
+
+    testImplementation deps.data.test.junit
+    testImplementation deps.data.test.mock_webserver
+    testImplementation deps.data.test.truth
+    testImplementation deps.data.test.mockito_kotlin
 
 }
 

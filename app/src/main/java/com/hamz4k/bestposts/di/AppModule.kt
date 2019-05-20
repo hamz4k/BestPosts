@@ -1,10 +1,9 @@
 package com.hamz4k.bestposts.di
 
-import com.google.gson.Gson
 import com.hamz4k.bestposts.BuildConfig
-import com.hamz4k.bestposts.ui.postdetail.PostDetailActivity
-import com.hamz4k.bestposts.ui.PostsActivity
-import com.hamz4k.data.posts.service.BestPostsService
+import com.hamz4k.bestposts.data.service.BestPostsService
+import com.hamz4k.bestposts.ui.posts.PostsActivity
+import com.hamz4k.bestposts.ui.posts.detail.PostDetailActivity
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -32,7 +31,7 @@ abstract class AppModule {
                 .baseUrl("http://jsonplaceholder.typicode.com/")
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(Gson()))
+                .addConverterFactory(GsonConverterFactory.create())
                 .build()
             return retrofit.create(BestPostsService::class.java)
         }
@@ -41,8 +40,8 @@ abstract class AppModule {
         private fun makeOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
             return OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
-                .connectTimeout(120, TimeUnit.SECONDS)
-                .readTimeout(120, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
                 .build()
         }
 
