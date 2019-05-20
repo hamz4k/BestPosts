@@ -1,29 +1,32 @@
-package com.hamz4k.bestposts.ui.postdetail
+package com.hamz4k.bestposts.ui.posts.detail
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hamz4k.bestposts.R
+import com.hamz4k.bestposts.domain.RxSchedulers
+import com.hamz4k.bestposts.model.DetailEvents
+import com.hamz4k.bestposts.model.DetailViewEffect
+import com.hamz4k.bestposts.model.DetailViewState
 import com.hamz4k.bestposts.model.PostUi
-import com.hamz4k.bestposts.presentation.PostDetailEvents
-import com.hamz4k.bestposts.presentation.PostDetailViewModel
-import com.hamz4k.bestposts.presentation.PostDetailViewModelFactory
-import com.hamz4k.bestposts.presentation.PostDetailViewState
+import com.hamz4k.bestposts.presentation.posts.detail.DetailViewModel
+import com.hamz4k.bestposts.presentation.posts.detail.DetailViewModelFactory
 import com.hamz4k.bestposts.utils.getViewModel
 import com.hamz4k.bestposts.utils.hide
 import com.hamz4k.bestposts.utils.makeSnackBar
 import com.hamz4k.bestposts.utils.show
+import com.jakewharton.rxbinding2.view.RxView
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import timber.log.Timber
 import javax.inject.Inject
 
 class PostDetailActivity : AppCompatActivity() {
@@ -44,11 +47,13 @@ class PostDetailActivity : AppCompatActivity() {
     /*        DI        */
     /* **************** */
     @Inject
-    lateinit var viewModelFactory: PostDetailViewModelFactory
-    private lateinit var viewModel: PostDetailViewModel
+    lateinit var mViewModelFactory: DetailViewModelFactory
+    private lateinit var viewModel: DetailViewModel
 
     private val postDetailProgress by lazy { findViewById<ContentLoadingProgressBar>(R.id.post_detail_loader) }
     private val postDetailRecyclerView by lazy { findViewById<RecyclerView>(R.id.post_detail_recycler_view) }
+    private val errorStateView by lazy { findViewById<ViewGroup>(R.id.error_state_layout) }
+    private val retryButtonView by lazy { findViewById<Button>(R.id.error_state_retry_button) }
 
     private var disposables: CompositeDisposable = CompositeDisposable()
     private lateinit var postDetailAdapter: DetailAdapter
@@ -66,14 +71,14 @@ class PostDetailActivity : AppCompatActivity() {
         intent.extras?.getParcelable<PostUi>(PARAM_POST)?.let {
             post = it
         } ?: run {
-            makeSnackBar("Post not found")
+            makeSnackBar(R.string.error_message)
             finish()
         }
         setContentView(R.layout.activity_post_detail)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        viewModel = getViewModel { viewModelFactory.supply() }
+        viewModel = getViewModel { mViewModelFactory.supply() }
 
         postDetailAdapter = DetailAdapter()
         postDetailRecyclerView.apply {
@@ -85,14 +90,20 @@ class PostDetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val screenLoadEvents: Observable<PostDetailEvents.ScreenLoad> =
-            Observable.just(PostDetailEvents.ScreenLoad(post))
+        val screenLoadEvents: Observable<DetailEvents.ScreenLoad> =
+            Observable.just(DetailEvents.ScreenLoad(post))
+        val retryClicks: Observable<DetailEvents.Retry> =
+            RxView.clicks(retryButtonView).map { DetailEvents.Retry(post) }
 
-        disposables += viewModel.registerToInputs(screenLoadEvents)
+        disposables += viewModel.registerToInputs(retryClicks, screenLoadEvents)
 
         disposables += viewModel.observeViewState()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(::updateView, ::handleViewStateError)
+            .observeOn(RxSchedulers.mainThread())
+            .subscribe(::updateView)
+
+        disposables += viewModel.observeViewEffects()
+            .subscribeOn(RxSchedulers.io())
+            .subscribe(::consumeViewEffect)
     }
 
     override fun onPause() {
@@ -108,22 +119,34 @@ class PostDetailActivity : AppCompatActivity() {
     /*      Private      */
     /* ***************** */
 
-    private fun updateView(viewState: PostDetailViewState) {
-        if (viewState.isLoading) {
-            postDetailProgress.show()
-            postDetailRecyclerView.hide()
-
-        } else {
-            postDetailProgress.hide()
-            postDetailRecyclerView.show()
-            postDetailAdapter.submitList(viewState.detail)
+    private fun consumeViewEffect(viewEffect: DetailViewEffect) {
+        when (viewEffect) {
+            is DetailViewEffect.DisplayErrorSnackbar -> makeSnackBar(viewEffect.message)
         }
     }
 
-    private fun handleViewStateError(throwable: Throwable) {
+    private fun updateView(viewState: DetailViewState) {
+        //Loading
+        if (viewState.isLoading) {
+            postDetailRecyclerView.hide()
+            postDetailProgress.show()
+            errorStateView.hide()
+            return
+        }
+        //Failure
+        viewState.error?.let {
+            postDetailRecyclerView.hide()
+            postDetailProgress.hide()
+            errorStateView.show()
+
+            makeSnackBar(it)
+            return
+        }
+        // Success
+        postDetailAdapter.submitList(viewState.detail)
+
+        postDetailRecyclerView.show()
         postDetailProgress.hide()
-        postDetailRecyclerView.hide()
-        makeSnackBar("something went wrong observing view state")
-        Timber.e(throwable, "something went wrong observing view state")
+        errorStateView.hide()
     }
 }
