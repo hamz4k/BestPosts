@@ -4,14 +4,14 @@ import com.hamz4k.bestposts.domain.comment.Comment
 import com.hamz4k.bestposts.domain.posts.PostOverview
 import com.hamz4k.bestposts.domain.posts.detail.Post
 import com.hamz4k.bestposts.domain.user.User
-import com.hamz4k.bestposts.model.PostDetailItem.Comment as CommentItem
+import com.hamz4k.bestposts.model.UiPostDetailItem.Comment as CommentItem
 
 class Fakes {
     val ui by lazy { Ui() }
     val domain by lazy { Domain() }
 
     class Ui {
-        val post = PostUi(
+        val post = UiPostOverview(
             userId = 1,
             id = 1,
             avatarUrl = "https://api.adorable.io/avatars/112/1@adorable",
@@ -21,7 +21,7 @@ class Fakes {
                     "nostrum rerum est autem sunt rem eveniet architecto",
             title = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit")
 
-        val detailItem = PostDetailItem.Detail(
+        val detailItem = UiPostDetailItem.Detail(
             author = "Leanne Graham",
             avatarUrl = "https://api.adorable.io/avatars/64/1@adorable",
             body = "quia et suscipit\n" +
@@ -31,7 +31,7 @@ class Fakes {
             title = "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
         )
 
-        val commentHeaderItem by lazy { PostDetailItem.CommentHeader(count = 5) }
+        val commentHeaderItem by lazy { UiPostDetailItem.CommentHeader(count = 5) }
 
         val comment1 by lazy {
             CommentItem(id = 1,

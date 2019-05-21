@@ -4,7 +4,7 @@ import com.hamz4k.bestposts.domain.comment.Comment
 import com.hamz4k.bestposts.domain.posts.detail.Post
 import com.hamz4k.bestposts.domain.posts.PostOverview
 
-fun PostUi.toPost() = PostOverview(
+fun UiPostOverview.toPost() = PostOverview(
     userId = userId,
     id = id,
     avatarUrl = avatarUrl,
@@ -12,7 +12,7 @@ fun PostUi.toPost() = PostOverview(
     body = body
 )
 
-fun PostOverview.toUi() = PostUi(
+fun PostOverview.toUi() = UiPostOverview(
     userId = userId,
     id = id,
     avatarUrl = avatarUrl,
@@ -20,14 +20,14 @@ fun PostOverview.toUi() = PostUi(
     body = body
 )
 
-fun Post.toDetail() = PostDetailItem.Detail(
+fun Post.toDetail() = UiPostDetailItem.Detail(
     author = user.name,
     avatarUrl = user.avatarUrl,
     title = title,
     body = body
 )
 
-fun Comment.toCommentItem() = PostDetailItem.Comment(
+fun Comment.toCommentItem() = UiPostDetailItem.Comment(
     id = id,
     name = name,
     email = email,

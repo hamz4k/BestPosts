@@ -1,7 +1,6 @@
 package com.hamz4k.bestposts.presentation
 
 import androidx.lifecycle.ViewModel
-import com.hamz4k.bestposts.model.State
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable

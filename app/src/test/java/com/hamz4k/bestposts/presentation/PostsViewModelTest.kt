@@ -5,10 +5,8 @@ import com.hamz4k.bestposts.R
 import com.hamz4k.bestposts.domain.RxSchedulers
 import com.hamz4k.bestposts.domain.initForTests
 import com.hamz4k.bestposts.domain.posts.PostListUseCase
-import com.hamz4k.bestposts.model.*
-import com.hamz4k.bestposts.presentation.posts.PostsViewModel
-import com.hamz4k.bestposts.presentation.posts.toPostEventErrorResult
-import com.hamz4k.bestposts.presentation.posts.toSuccessResult
+import com.hamz4k.bestposts.model.Fakes
+import com.hamz4k.bestposts.presentation.posts.*
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify

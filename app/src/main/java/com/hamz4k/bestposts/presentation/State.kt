@@ -1,4 +1,4 @@
-package com.hamz4k.bestposts.model
+package com.hamz4k.bestposts.presentation
 
 sealed class State<T> {
     class Loading<T> : State<T>()

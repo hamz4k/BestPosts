@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PostUi(
+data class UiPostOverview(
     val userId: Int,
     val id: Int,
     val avatarUrl: String,

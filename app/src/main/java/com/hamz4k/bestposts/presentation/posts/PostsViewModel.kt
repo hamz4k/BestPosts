@@ -2,10 +2,12 @@ package com.hamz4k.bestposts.presentation.posts
 
 import com.hamz4k.bestposts.R
 import com.hamz4k.bestposts.domain.RxSchedulers
-import com.hamz4k.bestposts.domain.posts.PostOverview
 import com.hamz4k.bestposts.domain.posts.PostListUseCase
-import com.hamz4k.bestposts.model.*
+import com.hamz4k.bestposts.domain.posts.PostOverview
 import com.hamz4k.bestposts.presentation.BaseViewModel
+import com.hamz4k.bestposts.presentation.State
+import com.hamz4k.bestposts.presentation.toError
+import com.hamz4k.bestposts.presentation.toSuccess
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import timber.log.Timber

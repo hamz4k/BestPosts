@@ -5,9 +5,12 @@ import com.hamz4k.bestposts.domain.RxSchedulers
 import com.hamz4k.bestposts.domain.posts.detail.Post
 import com.hamz4k.bestposts.domain.posts.detail.PostDetailUseCase
 import com.hamz4k.bestposts.model.*
-import com.hamz4k.bestposts.model.ResultDetailEvent.DetailLoadedResult
-import com.hamz4k.bestposts.model.ResultDetailEvent.LoadingFailedResult
 import com.hamz4k.bestposts.presentation.BaseViewModel
+import com.hamz4k.bestposts.presentation.State
+import com.hamz4k.bestposts.presentation.posts.detail.ResultDetailEvent.DetailLoadedResult
+import com.hamz4k.bestposts.presentation.posts.detail.ResultDetailEvent.LoadingFailedResult
+import com.hamz4k.bestposts.presentation.toError
+import com.hamz4k.bestposts.presentation.toSuccess
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import timber.log.Timber
@@ -132,7 +135,7 @@ class DetailViewModel(private val postsRepository: PostDetailUseCase) :
     /*     Side effects    */
     /* ******************* */
 
-    private fun fetchDetails(post: PostUi): Observable<State<ResultDetailEvent>> {
+    private fun fetchDetails(post: UiPostOverview): Observable<State<ResultDetailEvent>> {
         return postsRepository.postDetail(post.toPost())
             .subscribeOn(RxSchedulers.io())
             .map { it.toSuccessResult() }
@@ -146,12 +149,12 @@ class DetailViewModel(private val postsRepository: PostDetailUseCase) :
 fun Post.toSuccessResult(): State<ResultDetailEvent> {
     return (DetailLoadedResult(
         detailList = mutableListOf(toDetail(),
-                                   PostDetailItem.CommentHeader(comments.size)
+                                   UiPostDetailItem.CommentHeader(comments.size)
         ).plus(comments.map { it.toCommentItem() }).toList()
     ) as ResultDetailEvent).toSuccess()
 }
 
-fun Collection<PostDetailItem>.toSuccessResult() =
+fun Collection<UiPostDetailItem>.toSuccessResult() =
     (DetailLoadedResult(detailList = toList()) as ResultDetailEvent).toSuccess()
 
 fun Throwable.toDetailEventResult() =

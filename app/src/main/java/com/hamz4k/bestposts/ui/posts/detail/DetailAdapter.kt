@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.hamz4k.bestposts.R
-import com.hamz4k.bestposts.model.PostDetailItem
+import com.hamz4k.bestposts.model.UiPostDetailItem
 import com.hamz4k.bestposts.utils.inflate
 
-class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(DetailDiffCallback()) {
+class DetailAdapter : ListAdapter<UiPostDetailItem, RecyclerView.ViewHolder>(DetailDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -30,9 +30,9 @@ class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(Detai
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is CommentViewHolder -> holder.bind(getItem(position) as PostDetailItem.Comment)
-            is DetailViewHolder -> holder.bind(getItem(position) as PostDetailItem.Detail)
-            is CommentHeaderViewHolder -> holder.bind(getItem(position) as PostDetailItem.CommentHeader)
+            is CommentViewHolder -> holder.bind(getItem(position) as UiPostDetailItem.Comment)
+            is DetailViewHolder -> holder.bind(getItem(position) as UiPostDetailItem.Detail)
+            is CommentHeaderViewHolder -> holder.bind(getItem(position) as UiPostDetailItem.CommentHeader)
         }
 
     }
@@ -54,7 +54,7 @@ class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(Detai
         private val authorView: TextView = itemView.findViewById(R.id.post_detail_list_item_author)
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: PostDetailItem.Detail) {
+        fun bind(item: UiPostDetailItem.Detail) {
             Glide.with(itemView.context)
                 .load(item.avatarUrl)
                 .apply(RequestOptions.circleCropTransform())
@@ -72,7 +72,7 @@ class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(Detai
             itemView.findViewById(R.id.detail_comment_list_item_author_name)
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: PostDetailItem.CommentHeader) {
+        fun bind(item: UiPostDetailItem.CommentHeader) {
             commentHeaderView.text =
                 itemView.context.getString(R.string.comment_header_count, item.count)
         }
@@ -86,27 +86,29 @@ class DetailAdapter : ListAdapter<PostDetailItem, RecyclerView.ViewHolder>(Detai
         private val bodyView: TextView = itemView.findViewById(R.id.detail_comment_list_item_body)
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: PostDetailItem.Comment) {
+        fun bind(item: UiPostDetailItem.Comment) {
             authorEmailView.text = item.email
             authorNameView.text = item.name
             bodyView.text = item.body
         }
     }
 
-    class DetailDiffCallback : DiffUtil.ItemCallback<PostDetailItem>() {
-        override fun areItemsTheSame(oldItem: PostDetailItem, newItem: PostDetailItem): Boolean {
+    class DetailDiffCallback : DiffUtil.ItemCallback<UiPostDetailItem>() {
+        override fun areItemsTheSame(oldItem: UiPostDetailItem,
+                                     newItem: UiPostDetailItem): Boolean {
             return oldItem::class == newItem::class
         }
 
-        override fun areContentsTheSame(oldItem: PostDetailItem, newItem: PostDetailItem): Boolean {
-            if (oldItem is PostDetailItem.Detail && newItem is PostDetailItem.Detail) {
+        override fun areContentsTheSame(oldItem: UiPostDetailItem,
+                                        newItem: UiPostDetailItem): Boolean {
+            if (oldItem is UiPostDetailItem.Detail && newItem is UiPostDetailItem.Detail) {
                 return true
             }
-            if (oldItem is PostDetailItem.CommentHeader && newItem is PostDetailItem.CommentHeader) {
+            if (oldItem is UiPostDetailItem.CommentHeader && newItem is UiPostDetailItem.CommentHeader) {
                 return true
             }
-            return (oldItem as? PostDetailItem.Comment)?.let {
-                it.id == (newItem as? PostDetailItem.Comment)?.id
+            return (oldItem as? UiPostDetailItem.Comment)?.let {
+                it.id == (newItem as? UiPostDetailItem.Comment)?.id
             } ?: false
         }
     }

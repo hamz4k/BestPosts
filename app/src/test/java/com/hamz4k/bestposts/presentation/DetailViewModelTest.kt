@@ -6,9 +6,7 @@ import com.hamz4k.bestposts.domain.RxSchedulers
 import com.hamz4k.bestposts.domain.initForTests
 import com.hamz4k.bestposts.domain.posts.detail.PostDetailUseCase
 import com.hamz4k.bestposts.model.*
-import com.hamz4k.bestposts.presentation.posts.detail.DetailViewModel
-import com.hamz4k.bestposts.presentation.posts.detail.toDetailEventResult
-import com.hamz4k.bestposts.presentation.posts.detail.toSuccessResult
+import com.hamz4k.bestposts.presentation.posts.detail.*
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify

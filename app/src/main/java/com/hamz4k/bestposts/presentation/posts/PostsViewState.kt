@@ -1,4 +1,4 @@
-package com.hamz4k.bestposts.model
+package com.hamz4k.bestposts.presentation.posts
 
 import androidx.annotation.StringRes
 import com.hamz4k.bestposts.domain.posts.PostOverview

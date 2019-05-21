@@ -35,7 +35,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         private const val PARAM_POST = "param_post"
 
-        fun startActivity(source: Context, post: PostUi) {
+        fun startActivity(source: Context, post: UiPostOverview) {
             val intent = Intent(source, PostDetailActivity::class.java).apply {
                 putExtra(PARAM_POST, post)
             }
@@ -58,7 +58,7 @@ class PostDetailActivity : AppCompatActivity() {
     private var disposables: CompositeDisposable = CompositeDisposable()
     private lateinit var postDetailAdapter: DetailAdapter
 
-    private lateinit var post: PostUi
+    private lateinit var post: UiPostOverview
 
     /* ***************** */
     /*     Life cycle    */
@@ -68,7 +68,7 @@ class PostDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
 
-        intent.extras?.getParcelable<PostUi>(PARAM_POST)?.let {
+        intent.extras?.getParcelable<UiPostOverview>(PARAM_POST)?.let {
             post = it
         } ?: run {
             makeSnackBar(R.string.error_message)
