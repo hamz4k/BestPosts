@@ -29,3 +29,4 @@ The project has three modules :
   - JUnit 4 : Testing framework.
   - Mokito : Mocking framework.
   - Truth : Test assertions.
+  - MockWebserver : A webserver for testing api layer.
