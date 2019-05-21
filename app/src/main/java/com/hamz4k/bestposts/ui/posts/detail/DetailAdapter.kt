@@ -82,7 +82,8 @@ class DetailAdapter : ListAdapter<UiPostDetailItem, RecyclerView.ViewHolder>(Det
 
         private val authorEmailView: TextView =
             itemView.findViewById(R.id.detail_comment_list_item_author_email)
-        private val authorNameView: TextView = itemView.findViewById(R.id.detail_comment_list_item_author_name)
+        private val authorNameView: TextView =
+            itemView.findViewById(R.id.detail_comment_list_item_author_name)
         private val bodyView: TextView = itemView.findViewById(R.id.detail_comment_list_item_body)
 
         @SuppressLint("SetTextI18n")

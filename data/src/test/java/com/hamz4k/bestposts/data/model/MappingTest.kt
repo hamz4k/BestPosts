@@ -9,7 +9,7 @@ import org.junit.Test
 class MappingTest {
     private val fakes = Fakes()
     private val fakesData = fakes.data
-    private val fakesDomain  = fakes.domain
+    private val fakesDomain = fakes.domain
     private val postData = fakesData.post1
     private val postOverview = fakesDomain.postOverview1
     private val user = fakesDomain.user
@@ -33,6 +33,7 @@ class MappingTest {
         //then
         assertThat(userDomain.avatarUrl).isEqualTo(expectedAvatarUrl)
     }
+
     @Test
     fun should_map_user_data_to_user() {
         assertThat(userData.toUser()).isEqualTo(user)

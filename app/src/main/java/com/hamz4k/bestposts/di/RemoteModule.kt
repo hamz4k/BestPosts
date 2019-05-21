@@ -14,8 +14,10 @@ abstract class RemoteModule {
 
     @Binds
     abstract fun bindPostsRepository(postsRepository: NetworkPostsRepository): PostsRepository
+
     @Binds
     abstract fun bindUserRepository(postsRepository: NetworkUserRepository): UserRepository
+
     @Binds
     abstract fun bindCommentRepository(postsRepository: NetworkCommentRepository): CommentRepository
 }

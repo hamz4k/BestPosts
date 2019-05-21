@@ -12,12 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hamz4k.bestposts.R
 import com.hamz4k.bestposts.domain.RxSchedulers
-import com.hamz4k.bestposts.model.DetailEvents
-import com.hamz4k.bestposts.model.DetailViewEffect
-import com.hamz4k.bestposts.model.DetailViewState
-import com.hamz4k.bestposts.model.PostUi
-import com.hamz4k.bestposts.presentation.posts.detail.DetailViewModel
-import com.hamz4k.bestposts.presentation.posts.detail.DetailViewModelFactory
+import com.hamz4k.bestposts.model.UiPostOverview
+import com.hamz4k.bestposts.presentation.posts.detail.*
 import com.hamz4k.bestposts.utils.getViewModel
 import com.hamz4k.bestposts.utils.hide
 import com.hamz4k.bestposts.utils.makeSnackBar

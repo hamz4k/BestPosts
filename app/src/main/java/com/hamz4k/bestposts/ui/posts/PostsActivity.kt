@@ -11,12 +11,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.hamz4k.bestposts.R
 import com.hamz4k.bestposts.domain.RxSchedulers
 import com.hamz4k.bestposts.domain.posts.PostOverview
-import com.hamz4k.bestposts.model.PostsEvents
-import com.hamz4k.bestposts.model.PostsViewEffect
-import com.hamz4k.bestposts.model.PostsViewState
 import com.hamz4k.bestposts.model.toUi
-import com.hamz4k.bestposts.presentation.posts.PostsViewModel
-import com.hamz4k.bestposts.presentation.posts.PostsViewModelFactory
+import com.hamz4k.bestposts.presentation.posts.*
 import com.hamz4k.bestposts.ui.posts.detail.PostDetailActivity
 import com.hamz4k.bestposts.utils.*
 import com.jakewharton.rxbinding2.view.RxView

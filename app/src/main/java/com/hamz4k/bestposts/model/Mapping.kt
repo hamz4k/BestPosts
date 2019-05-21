@@ -1,8 +1,8 @@
 package com.hamz4k.bestposts.model
 
 import com.hamz4k.bestposts.domain.comment.Comment
-import com.hamz4k.bestposts.domain.posts.detail.Post
 import com.hamz4k.bestposts.domain.posts.PostOverview
+import com.hamz4k.bestposts.domain.posts.detail.Post
 
 fun UiPostOverview.toPost() = PostOverview(
     userId = userId,

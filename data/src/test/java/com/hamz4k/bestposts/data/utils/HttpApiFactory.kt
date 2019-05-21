@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit.SECONDS
 class HttpApiFactory(baseUrl: String) {
 
     companion object {
-        const val CONNECTION_TIMEOUT = 30L
-        const val READ_TIMEOUT = 30L
+        const val CONNECTION_TIMEOUT = 10L
+        const val READ_TIMEOUT = 10L
     }
 
     private object HttpClient {

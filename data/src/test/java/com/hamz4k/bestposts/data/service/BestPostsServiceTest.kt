@@ -2,8 +2,9 @@ package com.hamz4k.bestposts.data.service
 
 import com.hamz4k.bestposts.data.model.Fakes
 import com.hamz4k.bestposts.data.utils.HttpApiFactory
-import com.hamz4k.bestposts.data.utils.MockServer
+import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import okio.Buffer
 import org.junit.Before
@@ -12,9 +13,11 @@ import org.junit.Test
 
 
 class BestPostsServiceTest {
+
     @Rule
     @JvmField
-    val mockServer = MockServer()
+    val mockServer = MockWebServer()
+
     private lateinit var httpApiFactory: HttpApiFactory
     private lateinit var service: BestPostsService
 
@@ -25,7 +28,8 @@ class BestPostsServiceTest {
 
     @Before
     fun setup() {
-        httpApiFactory = HttpApiFactory(mockServer.baseUrl)
+        val url = mockServer.url("/").toString()
+        httpApiFactory = HttpApiFactory(url)
         service = httpApiFactory.createHttpAPi()
     }
 
@@ -100,5 +104,11 @@ class BestPostsServiceTest {
             }
             else -> MockResponse().setResponseCode(404)
         }
+    }
+
+    private fun MockWebServer.setDispatcher(f: (RecordedRequest) -> MockResponse) {
+        setDispatcher(object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest) = f(request)
+        })
     }
 }

@@ -9,5 +9,4 @@ data class UiPostOverview(
     val id: Int,
     val avatarUrl: String,
     val title: String,
-    val body: String
-) : Parcelable
+    val body: String) : Parcelable

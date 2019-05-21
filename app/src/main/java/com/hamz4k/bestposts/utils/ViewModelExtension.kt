@@ -1,10 +1,10 @@
 package com.hamz4k.bestposts.utils
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Get a viewModel that is bound to the Activity's lifecycle (meaning that it will survive config changes).
@@ -20,8 +20,9 @@ internal inline fun <reified T : ViewModel> AppCompatActivity.getViewModel(cross
 
 
 @Suppress("UNCHECKED_CAST")
-internal inline fun <VM : ViewModel> factory(crossinline f: () -> VM) = object : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return f() as T
+internal inline fun <VM : ViewModel> factory(crossinline f: () -> VM) =
+    object : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return f() as T
+        }
     }
-}

@@ -1,11 +1,11 @@
 package com.hamz4k.bestposts.data.posts
 
+import com.hamz4k.bestposts.data.model.Fakes
 import com.hamz4k.bestposts.data.posts.repository.NetworkPostsRepository
 import com.hamz4k.bestposts.data.service.BestPostsService
 import com.hamz4k.bestposts.domain.RxSchedulers
 import com.hamz4k.bestposts.domain.initForTests
 import com.nhaarman.mockito_kotlin.given
-import com.hamz4k.bestposts.data.model.Fakes
 import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Test

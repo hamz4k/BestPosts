@@ -9,10 +9,9 @@ sealed class UiPostDetailItem {
 
     data class CommentHeader(val count: Int) : UiPostDetailItem()
 
-        data class Comment(
-            val id: Int,
-            val name: String,
-            val email: String,
-            val body: String
-        ) : PostDetailItem()
-    }
+    data class Comment(
+        val id: Int,
+        val name: String,
+        val email: String,
+        val body: String) : UiPostDetailItem()
+}
