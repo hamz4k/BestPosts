@@ -30,3 +30,9 @@ The project has three modules :
   - Mokito : Mocking framework.
   - Truth : Test assertions.
   - MockWebserver : A webserver for testing api layer.
+
+#  Future improvements
+
+- The navigation between Post / Detail could benefit from a shared element transition with the post overview item in the list transitionning and expanding to its final position on the top of the Detail screen.
+- Preserve scroll position on screen rotation.
+- Add espresso end to end tests.
